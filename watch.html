@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Stopwatch</title>
+  <style>
+    body {
+      background-color: #333;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .timer {
+      font-size: 60px;
+      margin-bottom: 20px;
+      color: #318ce7; 
+    }
+    .btn-container {
+      display: flex;
+    }
+    button {
+      font-size: 18px;
+      padding: 10px 20px;
+      cursor: pointer;
+      margin-top: 10px;
+      margin-right: 10px;
+      border: none;
+      border-radius: 5px;
+      outline: none;
+    }
+    #startStopBtn {
+      background-color: rgb(52, 131, 243);
+      color: #fff;
+    }
+    #resetBtn {
+      background-color: rgb(47, 87, 233);
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="timer" id="display">00:00:00</div>
+    <div class="btn-container">
+      <button id="startStopBtn" onclick="startStop()">Start</button>
+      <button id="resetBtn" onclick="reset()">Reset</button>
+    </div>
+  </div>
+  <script>
+    let timer;
+    let startTime;
+    let elapsedTime = 0;
+    let running = false;
+
+    function startTimer() {
+      const currentTime = new Date().getTime();
+      elapsedTime = currentTime - startTime;
+
+      let milliseconds = elapsedTime;
+      let seconds = Math.floor(milliseconds / 1000);
+      milliseconds = milliseconds % 1000;
+      let minutes = Math.floor(seconds / 60);
+      seconds = seconds % 60;
+
+      document.getElementById('display').innerHTML =
+        (pad(minutes) + ':' + pad(seconds) + '.' + pad(milliseconds, 3));
+    }
+
+    function pad(number, width = 2) {
+      return number.toString().padStart(width, '0');
+    }
+
+    function startStop() {
+      if (!running) {
+        if (timer === null || elapsedTime === 0) {
+          startTime = new Date().getTime();
+        } else {
+          startTime = new Date().getTime() - elapsedTime;
+        }
+        timer = setInterval(startTimer, 1);
+        document.getElementById('startStopBtn').innerHTML = 'Stop';
+        document.getElementById('startStopBtn').style.backgroundColor = 'red';
+        document.getElementById('resetBtn').style.backgroundColor = 'orange';
+        running = true;
+      } else {
+        clearInterval(timer);
+        timer = null;
+        document.getElementById('startStopBtn').innerHTML = 'Start';
+        document.getElementById('startStopBtn').style.backgroundColor = 'orange';
+        document.getElementById('resetBtn').style.backgroundColor = 'blue';
+        running = false;
+      }
+    }
+
+    function reset() {
+      clearInterval(timer);
+      timer = null;
+      elapsedTime = 0;
+      document.getElementById('display').innerHTML = '00:00:00';
+      document.getElementById('startStopBtn').innerHTML = 'Start';
+      document.getElementById('startStopBtn').style.backgroundColor = 'orange';
+      document.getElementById('resetBtn').style.backgroundColor = 'blue';
+      running = false;
+    }
+  </script>
+</body>
+</html>
